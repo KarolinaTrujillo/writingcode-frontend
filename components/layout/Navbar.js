@@ -45,14 +45,6 @@ export default function Navbar() {
             </Link>
           ))}
         </div>
-
-        {/* Badge */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span className="badge badge-cyan">
-            <Code2 size={10} />
-            v1.0.0
-          </span>
-        </div>
       </div>
     </nav>
   );

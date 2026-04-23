@@ -1,29 +1,33 @@
 'use client';
 import { useState } from 'react';
 import { CheckCircle, XCircle, Terminal, Send, RotateCcw, Lightbulb } from 'lucide-react';
+import { marcarLeccionCompletada } from '@/lib/progreso';
 
 export default function EjercicioCard({ ejercicio, numero }) {
   const [respuesta, setRespuesta] = useState('');
   const [resultado, setResultado] = useState(null); // null | { es_correcto, mensaje }
   const [loading, setLoading] = useState(false);
 
-  async function verificar() {
-    if (!respuesta.trim()) return;
-    setLoading(true);
-    try {
-      const res = await fetch(`https://writingcode-backend.onrender.com/api/v1/ejercicios/${ejercicio.id_ejercicio}/verificar`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ respuesta: respuesta.trim() }),
-      });
-      const json = await res.json();
-      setResultado(json.data);
-    } catch {
-      setResultado({ es_correcto: false, mensaje: 'Error al conectar con el servidor.' });
-    } finally {
-      setLoading(false);
+async function verificar() {
+  if (!respuesta.trim()) return;
+  setLoading(true);
+  try {
+    const res = await fetch(`https://writingcode-backend.onrender.com/api/v1/ejercicios/${ejercicio.id_ejercicio}/verificar`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ respuesta: respuesta.trim() }),
+    });
+    const json = await res.json();
+    setResultado(json.data);
+    if (json.data?.es_correcto) {
+      marcarLeccionCompletada(ejercicio.id_leccion);
     }
+  } catch {
+    setResultado({ es_correcto: false, mensaje: 'Error al conectar con el servidor.' });
+  } finally {
+    setLoading(false);
   }
+}
 
   function reintentar() {
     setResultado(null);

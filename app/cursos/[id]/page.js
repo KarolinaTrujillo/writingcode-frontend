@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import { api } from '@/lib/api';
-import { BookOpen, Code2, ChevronRight, Coffee, Package, Layers, ArrowRight } from 'lucide-react';
+import { BookOpen, ChevronRight, Coffee, Package, Layers } from 'lucide-react';
+import LeccionItem from '@/components/ui/LeccionItem';
+import ProgresoBar from '@/components/ui/ProgresoBar';
 
 export async function generateMetadata({ params }) {
   try {
@@ -26,7 +28,6 @@ export default async function CursoPage({ params }) {
       })
     );
 
-    // Cargar datos de Docker Hub si es curso de docker
     if (curso.tecnologia === 'docker') {
       try { dockerImages = await api.getDockerHubPopular(); }
       catch { dockerImages = []; }
@@ -107,63 +108,43 @@ export default async function CursoPage({ params }) {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           {modulos.map((modulo, mi) => (
             <div key={modulo.id_modulo} className="card" style={{ padding: '0', overflow: 'hidden' }}>
+              {/* Header del módulo */}
               <div style={{
                 padding: '20px 28px',
                 background: 'var(--surface-2)',
                 borderBottom: '1px solid var(--border)',
-                display: 'flex', alignItems: 'center', gap: '14px',
               }}>
-                <div style={{
-                  width: '32px', height: '32px', minWidth: '32px',
-                  background: color + '22',
-                  border: `1px solid ${color}44`,
-                  borderRadius: '8px',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontFamily: 'Space Mono, monospace',
-                  fontSize: '0.75rem', fontWeight: 700, color,
-                }}>
-                  {String(mi + 1).padStart(2, '0')}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+                  <div style={{
+                    width: '32px', height: '32px', minWidth: '32px',
+                    background: color + '22',
+                    border: `1px solid ${color}44`,
+                    borderRadius: '8px',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontFamily: 'Space Mono, monospace',
+                    fontSize: '0.75rem', fontWeight: 700, color,
+                  }}>
+                    {String(mi + 1).padStart(2, '0')}
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <h3 style={{ fontSize: '1rem', fontWeight: 700 }}>{modulo.titulo}</h3>
+                    <span style={{ fontSize: '0.78rem', color: 'var(--text-3)', fontFamily: 'Space Mono, monospace' }}>
+                      {modulo.lecciones.length} lección{modulo.lecciones.length !== 1 ? 'es' : ''}
+                    </span>
+                  </div>
                 </div>
-                <div>
-                  <h3 style={{ fontSize: '1rem', fontWeight: 700 }}>{modulo.titulo}</h3>
-                  <span style={{ fontSize: '0.78rem', color: 'var(--text-3)', fontFamily: 'Space Mono, monospace' }}>
-                    {modulo.lecciones.length} lección{modulo.lecciones.length !== 1 ? 'es' : ''}
-                  </span>
-                </div>
+                {/* Barra de progreso del módulo */}
+                <ProgresoBar lecciones={modulo.lecciones} />
               </div>
 
+              {/* Lista de lecciones */}
               <div>
                 {modulo.lecciones.map((leccion, li) => (
-                  <Link key={leccion.id_leccion} href={`/lecciones/${leccion.id_leccion}`} style={{ textDecoration: 'none' }} className="leccion-row">
-                    <div style={{
-                      padding: '16px 28px',
-                      borderBottom: li < modulo.lecciones.length - 1 ? '1px solid var(--border)' : 'none',
-                      display: 'flex', alignItems: 'center', gap: '14px',
-                      transition: 'background 0.2s',
-                      cursor: 'pointer',
-                    }}>
-                      <div style={{
-                        width: '36px', height: '36px', minWidth: '36px',
-                        background: leccion.tipo === 'teoria' ? 'rgba(124,58,237,0.12)' : 'rgba(16,185,129,0.12)',
-                        borderRadius: '8px',
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      }}>
-                        {leccion.tipo === 'teoria'
-                          ? <BookOpen size={16} color="#a78bfa" />
-                          : <Code2 size={16} color="var(--success)" />
-                        }
-                      </div>
-                      <div style={{ flex: 1 }}>
-                        <div style={{ fontWeight: 500, fontSize: '0.95rem', marginBottom: '4px' }}>
-                          {leccion.titulo}
-                        </div>
-                        <span className={`badge badge-${leccion.tipo}`} style={{ fontSize: '0.65rem', padding: '2px 8px' }}>
-                          {leccion.tipo}
-                        </span>
-                      </div>
-                      <ArrowRight size={16} color="var(--text-3)" />
-                    </div>
-                  </Link>
+                  <LeccionItem
+                    key={leccion.id_leccion}
+                    leccion={leccion}
+                    isLast={li === modulo.lecciones.length - 1}
+                  />
                 ))}
                 {modulo.lecciones.length === 0 && (
                   <div style={{ padding: '24px 28px', color: 'var(--text-3)', fontSize: '0.9rem' }}>
@@ -175,7 +156,7 @@ export default async function CursoPage({ params }) {
           ))}
         </div>
 
-        {/* DOCKER HUB API - Solo para curso de Docker */}
+        {/* DOCKER HUB API */}
         {curso.tecnologia === 'docker' && dockerImages.length > 0 && (
           <div style={{ marginTop: '56px' }}>
             <div style={{ marginBottom: '24px' }}>
@@ -187,7 +168,6 @@ export default async function CursoPage({ params }) {
                 datos en tiempo real · fuente: Docker Hub API oficial
               </p>
             </div>
-
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '16px' }}>
               {dockerImages.map((img) => (
                 <a key={img.nombre} href={img.url} target="_blank" rel="noreferrer" style={{ textDecoration: 'none' }}>
@@ -206,15 +186,11 @@ export default async function CursoPage({ params }) {
                     <div style={{ display: 'flex', gap: '24px' }}>
                       <div>
                         <div style={{ fontSize: '0.68rem', color: 'var(--text-3)', fontFamily: 'Space Mono, monospace', marginBottom: '4px' }}>PULLS</div>
-                        <div style={{ fontWeight: 700, color: 'var(--text)', fontSize: '1.1rem' }}>
-                          {(img.pulls / 1e9).toFixed(1)}B
-                        </div>
+                        <div style={{ fontWeight: 700, color: 'var(--text)', fontSize: '1.1rem' }}>{(img.pulls / 1e9).toFixed(1)}B</div>
                       </div>
                       <div>
                         <div style={{ fontSize: '0.68rem', color: 'var(--text-3)', fontFamily: 'Space Mono, monospace', marginBottom: '4px' }}>STARS</div>
-                        <div style={{ fontWeight: 700, color: 'var(--text)', fontSize: '1.1rem' }}>
-                          {(img.stars / 1000).toFixed(1)}K
-                        </div>
+                        <div style={{ fontWeight: 700, color: 'var(--text)', fontSize: '1.1rem' }}>{(img.stars / 1000).toFixed(1)}K</div>
                       </div>
                     </div>
                   </div>
@@ -224,7 +200,6 @@ export default async function CursoPage({ params }) {
           </div>
         )}
 
-        {/* Botón volver */}
         <div style={{ marginTop: '40px' }}>
           <Link href="/cursos" className="btn-secondary">
             ← Volver a cursos

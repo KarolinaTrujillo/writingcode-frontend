@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { api } from '@/lib/api';
 import { BookOpen, Code2, ChevronRight, Terminal, Zap } from 'lucide-react';
 import EjercicioCard from '@/components/ui/EjercicioCard';
+import MarcarLeida from '@/components/ui/MarcarLeida';
 
 export async function generateMetadata({ params }) {
   try {
@@ -13,10 +14,12 @@ export async function generateMetadata({ params }) {
 
 export default async function LeccionPage({ params }) {
   const { id } = await params;
-  let leccion = null, ejercicios = [];
+  let leccion = null, ejercicios = [], nav = { anterior: null, siguiente: null };
   try {
     leccion    = await api.getLeccion(id);
     ejercicios = await api.getEjerciciosByLeccion(id);
+    const navData = await api.getNavegacionLeccion(id);
+    nav = { anterior: navData.anterior, siguiente: navData.siguiente };
   } catch {
     return (
       <div style={{ maxWidth: '800px', margin: '80px auto', padding: '0 32px', textAlign: 'center' }}>
@@ -116,6 +119,8 @@ export default async function LeccionPage({ params }) {
                 Completa los ejercicios al final de cada lección práctica para verificar tu aprendizaje.
               </p>
             </div>
+
+            <MarcarLeida id_leccion={leccion.id_leccion} />
           </div>
         ) : (
           <div style={{ padding: '24px', background: 'rgba(16,185,129,0.05)', border: '1px solid rgba(16,185,129,0.2)', borderRadius: '14px', display: 'flex', gap: '14px', alignItems: 'flex-start' }}>
@@ -154,10 +159,31 @@ export default async function LeccionPage({ params }) {
         </div>
       )}
 
-      <div style={{ marginTop: '48px', paddingTop: '32px', borderTop: '1px solid var(--border)' }}>
-        <Link href="/cursos" className="btn-secondary">
-          ← Volver a cursos
-        </Link>
+      {/* Navegación entre lecciones */}
+      <div style={{
+        marginTop: '48px', paddingTop: '32px',
+        borderTop: '1px solid var(--border)',
+        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+        gap: '16px', flexWrap: 'wrap',
+      }}>
+        <div>
+          {nav.anterior ? (
+            <Link href={`/lecciones/${nav.anterior.id_leccion}`} className="btn-secondary">
+              ← {nav.anterior.titulo}
+            </Link>
+          ) : (
+            <Link href="/cursos" className="btn-secondary">
+              ← Volver a cursos
+            </Link>
+          )}
+        </div>
+        <div>
+          {nav.siguiente && (
+            <Link href={`/lecciones/${nav.siguiente.id_leccion}`} className="btn-primary">
+              {nav.siguiente.titulo} →
+            </Link>
+          )}
+        </div>
       </div>
     </div>
   );

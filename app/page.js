@@ -1,9 +1,18 @@
 import Link from 'next/link';
 import { BookOpen, Code2, Zap, CheckCircle, ArrowRight, Coffee, Package } from 'lucide-react';
+import CubeLoader from '@/components/ui/CubeLoader';
 
 export default function HomePage() {
   return (
     <div>
+      <style>{`
+        @keyframes floating {
+          0% { transform: translateY(0px); }
+          50% { transform: translateY(10px); }
+          100% { transform: translateY(0px); }
+        }
+      `}</style>
+
       {/* ── HERO ─────────────────────────────────────────── */}
       <section className="grid-bg" style={{
         minHeight: '92vh',
@@ -11,7 +20,6 @@ export default function HomePage() {
         padding: '80px 32px',
         position: 'relative', overflow: 'hidden',
       }}>
-        {/* Orbs de fondo */}
         <div style={{
           position: 'absolute', top: '15%', left: '10%',
           width: '400px', height: '400px',
@@ -25,68 +33,67 @@ export default function HomePage() {
           borderRadius: '50%', pointerEvents: 'none',
         }} />
 
-        <div style={{ maxWidth: '780px', textAlign: 'center', position: 'relative', zIndex: 1 }}>
-          {/* Tag */}
-          <div className="animate-fade-up" style={{ marginBottom: '28px' }}>
-            <span className="badge badge-cyan" style={{ fontSize: '0.78rem', padding: '6px 16px' }}>
-              <Zap size={12} />
-              Aprende programando, no copiando
-            </span>
+        <div style={{
+          maxWidth: '1100px', width: '100%',
+          display: 'flex', alignItems: 'center', gap: '60px',
+          position: 'relative', zIndex: 1, flexWrap: 'wrap',
+          justifyContent: 'center',
+        }}>
+          <div style={{ flex: 1, minWidth: '320px', textAlign: 'left' }}>
+            <h1 className="animate-fade-up delay-100" style={{ fontSize: 'clamp(2.4rem, 5vw, 4.5rem)', fontWeight: 800, marginBottom: '24px', letterSpacing: '-0.02em' }}>
+              Domina{' '}
+              <span className="grad-text">Java</span>{' '}
+              y{' '}
+              <span style={{ color: 'var(--docker)' }}>Docker</span>
+              <br />
+              <span style={{ color: 'var(--text-2)', fontSize: '0.75em', fontWeight: 600 }}>
+                paso a paso
+              </span>
+            </h1>
+
+            <p className="animate-fade-up delay-200" style={{
+              fontSize: '1.1rem', color: 'var(--text-2)',
+              marginBottom: '44px', lineHeight: '1.7', maxWidth: '480px',
+            }}>
+              WritingCode te guía con lecciones cortas, ejercicios interactivos
+              y verificación inmediata. Sin copiar, sin confusión.
+            </p>
+
+            <div className="animate-fade-up delay-300" style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
+              <Link href="/cursos" className="btn-primary" style={{ fontSize: '1rem', padding: '14px 36px' }}>
+                <BookOpen size={18} />
+                Explorar cursos
+                <ArrowRight size={16} />
+              </Link>
+              <Link href="/cursos" className="btn-secondary" style={{ fontSize: '1rem', padding: '14px 36px' }}>
+                <Code2 size={18} />
+                Ver ejercicios
+              </Link>
+            </div>
+
+            <div className="animate-fade-up delay-400" style={{ display: 'flex', gap: '48px', marginTop: '56px', flexWrap: 'wrap' }}>
+              {[
+                { value: '2', label: 'Cursos' },
+                { value: '20', label: 'Lecciones' },
+                { value: '10', label: 'Ejercicios' },
+              ].map(({ value, label }) => (
+                <div key={label} style={{ textAlign: 'center' }}>
+                  <div style={{ fontFamily: 'Syne, sans-serif', fontWeight: 800, fontSize: '2.2rem', color: 'var(--accent)' }}>
+                    {value}
+                  </div>
+                  <div style={{ fontSize: '0.85rem', color: 'var(--text-3)', fontFamily: 'Space Mono, monospace' }}>
+                    {label}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
 
-          {/* Título */}
-          <h1 className="animate-fade-up delay-100" style={{ fontSize: 'clamp(2.8rem, 6vw, 5rem)', fontWeight: 800, marginBottom: '24px', letterSpacing: '-0.02em' }}>
-            Domina{' '}
-            <span className="grad-text">Java</span>{' '}
-            y{' '}
-            <span style={{ color: 'var(--docker)' }}>Docker</span>
-            <br />
-            <span style={{ color: 'var(--text-2)', fontSize: '0.75em', fontWeight: 600 }}>
-              paso a paso
-            </span>
-          </h1>
-
-          {/* Descripción */}
-          <p className="animate-fade-up delay-200" style={{
-            fontSize: '1.15rem', color: 'var(--text-2)',
-            marginBottom: '44px', lineHeight: '1.7', maxWidth: '560px', margin: '0 auto 44px',
+          <div className="animate-fade-up delay-200" style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            minWidth: '260px', flex: '0 0 auto',
           }}>
-            WritingCode te guía con lecciones cortas, ejercicios interactivos
-            y verificación inmediata. Sin copiar, sin confusión.
-          </p>
-
-          {/* CTAs */}
-          <div className="animate-fade-up delay-300" style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
-            <Link href="/cursos" className="btn-primary" style={{ fontSize: '1rem', padding: '14px 36px' }}>
-              <BookOpen size={18} />
-              Explorar cursos
-              <ArrowRight size={16} />
-            </Link>
-            <Link href="/cursos" className="btn-secondary" style={{ fontSize: '1rem', padding: '14px 36px' }}>
-              <Code2 size={18} />
-              Ver ejercicios
-            </Link>
-          </div>
-
-          {/* Stats */}
-          <div className="animate-fade-up delay-400" style={{
-            display: 'flex', gap: '48px', justifyContent: 'center', marginTop: '64px',
-            flexWrap: 'wrap',
-          }}>
-            {[
-              { value: '2', label: 'Cursos' },
-              { value: '8', label: 'Lecciones' },
-              { value: '4', label: 'Ejercicios' },
-            ].map(({ value, label }) => (
-              <div key={label} style={{ textAlign: 'center' }}>
-                <div style={{ fontFamily: 'Syne, sans-serif', fontWeight: 800, fontSize: '2.2rem', color: 'var(--accent)' }}>
-                  {value}
-                </div>
-                <div style={{ fontSize: '0.85rem', color: 'var(--text-3)', fontFamily: 'Space Mono, monospace' }}>
-                  {label}
-                </div>
-              </div>
-            ))}
+            <CubeLoader />
           </div>
         </div>
       </section>
@@ -103,63 +110,131 @@ export default function HomePage() {
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '24px' }}>
-          {/* Java card */}
+
+          {/* ── JAVA CARD ── */}
           <Link href="/cursos" style={{ textDecoration: 'none' }}>
-            <div className="card animate-fade-up delay-100" style={{
-              padding: '40px',
-              background: 'linear-gradient(135deg, var(--surface) 0%, rgba(245,158,11,0.05) 100%)',
-              border: '1px solid rgba(245,158,11,0.2)',
-              cursor: 'pointer',
+            <div className="animate-fade-up delay-100" style={{
+              height: '280px', position: 'relative', cursor: 'pointer',
+              borderRadius: '16px', overflow: 'hidden',
+              boxShadow: '0px 0px 10px 1px #000000ee',
             }}>
-              <div style={{
-                width: '64px', height: '64px',
-                background: 'rgba(245,158,11,0.15)',
-                borderRadius: '16px',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                marginBottom: '24px',
-                fontSize: '2rem',
-              }}>
-                <Coffee size={32} color="var(--java)" />
+              {/* Iluminación animada Java */}
+              <div style={{ position: 'absolute', width: '100%', height: '100%', zIndex: 0 }}>
+                <div style={{
+                  width: '120px', height: '120px', borderRadius: '50%',
+                  background: 'rgba(245,158,11,0.7)',
+                  position: 'absolute', top: '-20px', left: '-10px',
+                  filter: 'blur(40px)',
+                  animation: 'floating 2600ms infinite linear',
+                }} />
+                <div style={{
+                  width: '200px', height: '200px', borderRadius: '50%',
+                  background: 'rgba(245,158,11,0.45)',
+                  position: 'absolute', top: '30px', left: '80px',
+                  filter: 'blur(55px)',
+                  animation: 'floating 2600ms infinite linear',
+                  animationDelay: '-800ms',
+                }} />
+                <div style={{
+                  width: '50px', height: '50px', borderRadius: '50%',
+                  background: 'rgba(251,191,36,0.6)',
+                  position: 'absolute', top: '-30px', left: '200px',
+                  filter: 'blur(18px)',
+                  animation: 'floating 2600ms infinite linear',
+                  animationDelay: '-1800ms',
+                }} />
               </div>
-              <span className="badge badge-java" style={{ marginBottom: '16px' }}>Java</span>
-              <h3 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '12px' }}>
-                Java desde cero
-              </h3>
-              <p style={{ color: 'var(--text-2)', fontSize: '0.95rem', marginBottom: '24px', lineHeight: '1.6' }}>
-                Aprende los fundamentos de Java paso a paso. Variables, tipos de datos y tu primer programa.
-              </p>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--java)', fontFamily: 'Space Mono, monospace', fontSize: '0.85rem', fontWeight: 700 }}>
-                Empezar <ArrowRight size={16} />
+              {/* Contenido */}
+              <div style={{
+                position: 'absolute', inset: 0, zIndex: 1,
+                padding: '32px', display: 'flex', flexDirection: 'column',
+                justifyContent: 'space-between',
+                background: 'rgba(26,34,51,0.82)',
+                backdropFilter: 'blur(4px)',
+              }}>
+                <div>
+                  <div style={{
+                    width: '52px', height: '52px', background: 'rgba(245,158,11,0.15)',
+                    borderRadius: '13px', display: 'flex', alignItems: 'center',
+                    justifyContent: 'center', marginBottom: '14px',
+                  }}>
+                    <Coffee size={26} color="var(--java)" />
+                  </div>
+                  <span className="badge badge-java" style={{ marginBottom: '10px' }}>Java</span>
+                  <h3 style={{ fontSize: '1.4rem', fontWeight: 700, marginBottom: '8px', marginTop: '8px' }}>
+                    Java desde cero
+                  </h3>
+                  <p style={{ color: 'var(--text-2)', fontSize: '0.9rem', lineHeight: '1.5' }}>
+                    Aprende los fundamentos de Java paso a paso. Variables, tipos de datos y tu primer programa.
+                  </p>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--java)', fontFamily: 'Space Mono, monospace', fontSize: '0.85rem', fontWeight: 700 }}>
+                  Empezar <ArrowRight size={16} />
+                </div>
               </div>
             </div>
           </Link>
 
-          {/* Docker card */}
+          {/* ── DOCKER CARD ── */}
           <Link href="/cursos" style={{ textDecoration: 'none' }}>
-            <div className="card animate-fade-up delay-200" style={{
-              padding: '40px',
-              background: 'linear-gradient(135deg, var(--surface) 0%, rgba(59,130,246,0.05) 100%)',
-              border: '1px solid rgba(59,130,246,0.2)',
-              cursor: 'pointer',
+            <div className="animate-fade-up delay-200" style={{
+              height: '280px', position: 'relative', cursor: 'pointer',
+              borderRadius: '16px', overflow: 'hidden',
+              boxShadow: '0px 0px 10px 1px #000000ee',
             }}>
-              <div style={{
-                width: '64px', height: '64px',
-                background: 'rgba(59,130,246,0.15)',
-                borderRadius: '16px',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                marginBottom: '24px',
-              }}>
-                <Package size={32} color="var(--docker)" />
+              {/* Iluminación animada Docker */}
+              <div style={{ position: 'absolute', width: '100%', height: '100%', zIndex: 0 }}>
+                <div style={{
+                  width: '120px', height: '120px', borderRadius: '50%',
+                  background: 'rgba(59,130,246,0.7)',
+                  position: 'absolute', top: '-20px', left: '-10px',
+                  filter: 'blur(40px)',
+                  animation: 'floating 2600ms infinite linear',
+                }} />
+                <div style={{
+                  width: '200px', height: '200px', borderRadius: '50%',
+                  background: 'rgba(59,130,246,0.45)',
+                  position: 'absolute', top: '30px', left: '80px',
+                  filter: 'blur(55px)',
+                  animation: 'floating 2600ms infinite linear',
+                  animationDelay: '-800ms',
+                }} />
+                <div style={{
+                  width: '50px', height: '50px', borderRadius: '50%',
+                  background: 'rgba(99,179,255,0.6)',
+                  position: 'absolute', top: '-30px', left: '200px',
+                  filter: 'blur(18px)',
+                  animation: 'floating 2600ms infinite linear',
+                  animationDelay: '-1800ms',
+                }} />
               </div>
-              <span className="badge badge-docker" style={{ marginBottom: '16px' }}>Docker</span>
-              <h3 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '12px' }}>
-                Docker esencial
-              </h3>
-              <p style={{ color: 'var(--text-2)', fontSize: '0.95rem', marginBottom: '24px', lineHeight: '1.6' }}>
-                Domina contenedores desde lo básico. Imágenes, comandos y tu primer contenedor en minutos.
-              </p>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--docker)', fontFamily: 'Space Mono, monospace', fontSize: '0.85rem', fontWeight: 700 }}>
-                Empezar <ArrowRight size={16} />
+              {/* Contenido */}
+              <div style={{
+                position: 'absolute', inset: 0, zIndex: 1,
+                padding: '32px', display: 'flex', flexDirection: 'column',
+                justifyContent: 'space-between',
+                background: 'rgba(26,34,51,0.82)',
+                backdropFilter: 'blur(4px)',
+              }}>
+                <div>
+                  <div style={{
+                    width: '52px', height: '52px', background: 'rgba(59,130,246,0.15)',
+                    borderRadius: '13px', display: 'flex', alignItems: 'center',
+                    justifyContent: 'center', marginBottom: '14px',
+                  }}>
+                    <Package size={26} color="var(--docker)" />
+                  </div>
+                  <span className="badge badge-docker" style={{ marginBottom: '10px' }}>Docker</span>
+                  <h3 style={{ fontSize: '1.4rem', fontWeight: 700, marginBottom: '8px', marginTop: '8px' }}>
+                    Docker esencial
+                  </h3>
+                  <p style={{ color: 'var(--text-2)', fontSize: '0.9rem', lineHeight: '1.5' }}>
+                    Domina contenedores desde lo básico. Imágenes, comandos y tu primer contenedor en minutos.
+                  </p>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--docker)', fontFamily: 'Space Mono, monospace', fontSize: '0.85rem', fontWeight: 700 }}>
+                  Empezar <ArrowRight size={16} />
+                </div>
               </div>
             </div>
           </Link>
@@ -174,7 +249,6 @@ export default function HomePage() {
               ¿Cómo <span className="grad-text-green">funciona</span>?
             </h2>
           </div>
-
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '32px' }}>
             {[
               { step: '01', icon: <BookOpen size={24} />, title: 'Lee la lección', desc: 'Teoría clara y concisa sobre el tema' },
@@ -194,9 +268,7 @@ export default function HomePage() {
                 }}>
                   {icon}
                 </div>
-                <div style={{ fontFamily: 'Space Mono, monospace', fontSize: '0.7rem', color: 'var(--text-3)', marginBottom: '8px' }}>
-                  {step}
-                </div>
+                <div style={{ fontFamily: 'Space Mono, monospace', fontSize: '0.7rem', color: 'var(--text-3)', marginBottom: '8px' }}>{step}</div>
                 <h4 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '8px' }}>{title}</h4>
                 <p style={{ fontSize: '0.875rem', color: 'var(--text-2)', lineHeight: '1.5' }}>{desc}</p>
               </div>
@@ -222,7 +294,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Footer */}
       <footer style={{
         borderTop: '1px solid var(--border)',
         padding: '32px',
@@ -231,7 +302,7 @@ export default function HomePage() {
         fontFamily: 'Space Mono, monospace',
         fontSize: '0.8rem',
       }}>
-        WritingCode © 2026 · Universidad Politécnica de Chiapas · Aplicaciones Web Orientadas a Servicios
+        WritingCode © 2026
       </footer>
     </div>
   );
